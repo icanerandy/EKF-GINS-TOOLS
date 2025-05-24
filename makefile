@@ -17,7 +17,7 @@ mr:
 
 r:
 	clear
-	./build/bin/test_main.exe
+	./build/Debug/*.exe
 
 clean:
 	rm build -fr
