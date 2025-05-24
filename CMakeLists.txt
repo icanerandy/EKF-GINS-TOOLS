@@ -10,6 +10,11 @@ file(GLOB_RECURSE SRC_FILES
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
+target_compile_definitions(
+        ${PROJECT_NAME} PRIVATE
+        _USE_MATH_DEFINES
+)
+
 target_include_directories(
         ${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/src
@@ -22,8 +27,8 @@ target_link_libraries(
         fmt::fmt
         spdlog::spdlog
         Eigen3::Eigen
-#        nlohmann_json::nlohmann_json
-#        tomlplusplus::tomlplusplus
+        #        nlohmann_json::nlohmann_json
+        #        tomlplusplus::tomlplusplus
         #        GeographicLib::GeographicLib
 )
 

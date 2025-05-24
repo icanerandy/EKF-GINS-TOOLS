@@ -25,13 +25,29 @@ ArbitrarilyMountedGINS::ArbitrarilyMountedGINS(double imu_sampling_interval)
     double epsilon_gyro_still_increment = 0.0004 / 10.0;
     double mu_turn_gyro_increment_sq    = 0.0005 / (10.0 * 10.0); /* G_ij^2, 所以分母平方 */
 
-    motion_recognizer_ = std::make_unique<MotionRecognizer>{
+    motion_recognizer_ = std::make_unique<MotionRecognizer>(
         N_still, N_turn,
         epsilon_acc_still_increment, epsilon_gyro_still_increment,
         mu_turn_gyro_increment_sq, // 注意这是 G_ij^2 的阈值
         imu_dt_
-    };
+    );
 
     // --- 初始化EKF ---
-    ekf_ = std::make_unique<LooselyCoupledEKF>();
+    ekf_ = std::make_unique<GnssImsEskf>();
+
+    // 初始化失准角为单位阵 (无失准)
+    misalignment_.cmb = Eigen::Matrix3d::Identity();
+    misalignment_.angels.setZero();
+
+    cmm1_.setIdentity(); // m系到m1系 (水平对准的传感器系)
+    current_nav_state_.cbn.setIdentity();
+    current_nav_state_.attitude.setZero();
+    current_nav_state_.vel = 0;
+    current_nav_state_.ll.setZero();
+    current_accel_bias_.setZero();
+    current_gyro_bias_.setZero();
+
+    // 用于 coarse heading estimation 的计数器 [cite: 134, 136]
+    valid_psi_m1_estimation_count_ = 0;
+    psi_m1_                        = 0.0; // 水平对准的传感器m1系的航向角
 }

@@ -43,7 +43,7 @@ public:
     }
 
     /* 计算子午圈半径和卯酉圈半径 */
-    static Eigen::Vector2d MeridianPrimeVerticalRadius(double lat) {
+    static Vector2d MeridianPrimeVerticalRadius(double lat) {
         double tmp, sqrttmp;
 
         tmp = sin(lat);
